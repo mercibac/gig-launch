@@ -12,6 +12,7 @@ dependencies = [
     "pygetwindow>=0.0.9",
     "pyperclip>=1.11.0",
     "pyscreeze>=1.0.1",
+    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]

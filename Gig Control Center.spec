@@ -5,7 +5,7 @@ a = Analysis(
     ['main_ui.py'],
     pathex=[],
     binaries=[],
-    datas=[('osc_icon.png', '.'), ('icon.ico', '.')],
+    datas=[('osc_icon.png', '.'), ('icon.ico', '.'), ('settings.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -6,6 +6,7 @@ import pyautogui
 import pyperclip
 import os
 import sys
+import json
 import glob
 import connection
 import snap
@@ -15,11 +16,21 @@ def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
+        base_path = sys._MEIPASS  # ignore
     except Exception:
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
+CONFIG_FILE = resource_path("settings.json")
+
+
+with open(CONFIG_FILE, "r") as f:
+    CONFIG = json.load(f)
+
+WIFI = CONFIG["hotspot_name"]
+PHONE = CONFIG["phone_name"]
 
 
 def get_wifi_ip():
@@ -62,7 +73,7 @@ def get_osc_on_top():
         print("PyAutoGUI could not locate the image.")
 
 
-def open_url_on_phone(url, phone_name="TECNO SPARK 10 Pro"):
+def open_url_on_phone(url, phone_name=PHONE):
     """
     Sends a URL to a specific paired device via KDE Connect.
     """
@@ -86,6 +97,23 @@ def open_url_on_phone(url, phone_name="TECNO SPARK 10 Pro"):
         print(
             "Error: 'kdeconnect-cli' not found. Make sure the KDE Connect Windows app is installed and running."
         )
+
+
+def load_the_most_recent_file():
+    pyautogui.click(x=14, y=62)
+    pyautogui.moveTo(x=99, y=100)
+    pyautogui.moveTo(x=275, y=189)
+    pyautogui.click(x=450, y=189)
+
+
+def default_file_exists():
+    gig_osc_file = CONFIG["osc_file_path"]
+    file_exist = os.path.isfile(resource_path(gig_osc_file))
+
+    if file_exist:
+        return gig_osc_file
+    else:
+        return False
 
 
 def launch_programs():
@@ -141,10 +169,9 @@ def launch_programs():
     # ---------------------------------------------------------
     # 5. Load the most recent file
     # ---------------------------------------------------------
-    pyautogui.click(x=14, y=62)
-    pyautogui.moveTo(x=99, y=100)
-    pyautogui.moveTo(x=275, y=189)
-    pyautogui.click(x=450, y=189)
+
+    if not default_file_exists():
+        load_the_most_recent_file()
 
     open_url_on_phone(f"http://{ip_address}:8080")
 
@@ -153,7 +180,7 @@ def main():
     # ---------------------------------------------------------
     # 0. Connect the PC to my mobile HotSpot
     # ---------------------------------------------------------
-    target = "MERBAC PRO"
+    target = WIFI
     network_ready = connection.ensure_correct_network(target)
 
     if network_ready:
