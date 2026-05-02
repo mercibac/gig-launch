@@ -1,5 +1,6 @@
 import subprocess
 import time
+from utils import WIFI
 
 
 def get_current_wifi():
@@ -72,7 +73,7 @@ def ensure_correct_network(target_ssid):
 
 if __name__ == "__main__":
     # Your target phone hotspot name
-    target_network = "MERBAC PRO"
+    target_network = WIFI
 
     # Run the check
     network_ready = ensure_correct_network(target_network)

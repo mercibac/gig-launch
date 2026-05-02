@@ -6,10 +6,10 @@ import pyautogui
 import pyperclip
 import os
 import sys
-import json
 import glob
 import connection
 import snap
+from utils import CONFIG, WIFI, PHONE
 
 
 def resource_path(relative_path):
@@ -21,16 +21,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
-
-
-CONFIG_FILE = resource_path("settings.json")
-
-
-with open(CONFIG_FILE, "r") as f:
-    CONFIG = json.load(f)
-
-WIFI = CONFIG["hotspot_name"]
-PHONE = CONFIG["phone_name"]
 
 
 def get_wifi_ip():
