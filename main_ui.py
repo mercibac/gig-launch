@@ -12,6 +12,7 @@ import ctypes
 # ---------------------------------------------------------
 import gig_launcher
 import gig_close
+from utils import CONFIG_FILE
 
 
 def resource_path(relative_path):
@@ -24,7 +25,6 @@ def resource_path(relative_path):
 
 
 # --- Configuration Manager ---
-CONFIG_FILE = resource_path("settings.json")
 DEFAULT_CONFIG = {
     "phone_name": "SMART PHONE",
     "hotspot_name": "SHARED ACCESS POINT",
