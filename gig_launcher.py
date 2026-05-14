@@ -73,10 +73,17 @@ def open_url_on_phone(url, phone_name):
     # The command uses --share to send the link, and --name to target the exact device
     command = ["kdeconnect-cli", "--share", url, "--name", phone_name]
 
+    # KDE Connect uses Qt, which needs a valid window handle for its event loop.
+    # CREATE_NO_WINDOW kills the handle entirely and breaks Qt's PostMessage.
+    # Instead, we create a hidden window so Qt works but the user sees nothing.
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    si.wShowWindow = subprocess.SW_HIDE
+
     try:
         # Run the command silently in the background
-        subprocess.run(refresh, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
-        subprocess.run(command, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+        subprocess.run(refresh, check=True, startupinfo=si)
+        subprocess.run(command, check=True, startupinfo=si)
         print("URL sent successfully! Your phone should wake up and open the browser.")
 
     except subprocess.CalledProcessError as e:
