@@ -9,7 +9,7 @@ import sys
 import glob
 import connection
 import snap
-from utils import CONFIG, WIFI, PHONE
+from utils import load_config
 
 
 def resource_path(relative_path):
@@ -63,7 +63,7 @@ def get_osc_on_top():
         print("PyAutoGUI could not locate the image.")
 
 
-def open_url_on_phone(url, phone_name=PHONE):
+def open_url_on_phone(url, phone_name):
     """
     Sends a URL to a specific paired device via KDE Connect.
     """
@@ -97,7 +97,8 @@ def load_the_most_recent_file():
 
 
 def default_file_exists():
-    gig_osc_file = CONFIG["osc_file_path"]
+    config = load_config()
+    gig_osc_file = config["osc_file_path"]
     file_exist = os.path.isfile(resource_path(gig_osc_file))
 
     if file_exist:
@@ -106,7 +107,7 @@ def default_file_exists():
         return False
 
 
-def launch_programs():
+def launch_programs(phone_name):
     # ---------------------------------------------------------
     # 1. Software Paths
     # ---------------------------------------------------------
@@ -163,21 +164,26 @@ def launch_programs():
     if not default_file_exists():
         load_the_most_recent_file()
 
-    open_url_on_phone(f"http://{ip_address}:8080")
+    open_url_on_phone(f"http://{ip_address}:8080", phone_name)
 
 
 def main():
     # ---------------------------------------------------------
-    # 0. Connect the PC to my mobile HotSpot
+    # 0. Load fresh settings every time (so UI changes apply immediately)
     # ---------------------------------------------------------
-    target = WIFI
+    config = load_config()
+    target = config["hotspot_name"]
+
+    # ---------------------------------------------------------
+    # 1. Connect the PC to my mobile HotSpot
+    # ---------------------------------------------------------
     network_ready = connection.ensure_correct_network(target)
 
     if network_ready:
         print(
             "\nNetwork is secure. Ready to launch Gig Performer and Open Stage Control..."
         )
-        launch_programs()
+        launch_programs(config["phone_name"])
         snap.snap_gig_windows()
     else:
         print("\nPlease check your phone hotspot and try again.")
