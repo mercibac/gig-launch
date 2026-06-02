@@ -33,7 +33,9 @@ def _ensure_settings_file():
     """On first run after install, copy the bundled default settings to the persistent location."""
     if not os.path.exists(CONFIG_FILE):
         bundled = resource_path("settings.json")
-        if os.path.exists(bundled) and os.path.normpath(bundled) != os.path.normpath(CONFIG_FILE):
+        if os.path.exists(bundled) and os.path.normpath(bundled) != os.path.normpath(
+            CONFIG_FILE
+        ):
             shutil.copy2(bundled, CONFIG_FILE)
 
 

@@ -5,22 +5,12 @@ import time
 import pyautogui
 import pyperclip
 import os
-import sys
 import glob
 import connection
 import snap
-from utils import load_config
-
-
-def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS  # ignore
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
+from utils import load_config, resource_path
+from switch_defender import switch_defender
+from switch_sleep import switch_sleep
 
 
 def get_wifi_ip():
@@ -47,7 +37,7 @@ def get_osc_on_top():
     pyautogui.moveTo(screen_width / 2, screen_height - 1, duration=0.2)
     time.sleep(1)
     # icon_image = "osc_icon.png"
-    icon_image = resource_path("osc_icon.png")
+    icon_image = resource_path("./assets/osc_icon.png")
 
     try:
         icon_location = pyautogui.locateCenterOnScreen(icon_image, confidence=0.8)
@@ -182,7 +172,13 @@ def main():
     target = config["hotspot_name"]
 
     # ---------------------------------------------------------
-    # 1. Connect the PC to my mobile HotSpot
+    # 1. Change PC sleep settings and deactivate the antivirus
+    # ---------------------------------------------------------
+    switch_sleep("off")
+    switch_defender("off")
+
+    # ---------------------------------------------------------
+    # 2. Connect the PC to my mobile HotSpot
     # ---------------------------------------------------------
     network_ready = connection.ensure_correct_network(target)
 
@@ -198,3 +194,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # print(icon_def)

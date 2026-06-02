@@ -37,7 +37,7 @@ def connect_to_network(ssid_name):
 
         # Give Windows a few seconds to negotiate the IP address with your phone
         print("Waiting for connection to stabilize...")
-        time.sleep(5)
+        time.sleep(30)
 
     except subprocess.CalledProcessError:
         print(
@@ -68,19 +68,3 @@ def ensure_correct_network(target_ssid):
         else:
             print(f"Error: Could not connect to '{target_ssid}'. Halting gig setup.")
             return False
-
-
-# if __name__ == "__main__":
-#     # Your target phone hotspot name
-#     target_network = WIFI
-#
-#     # Run the check
-#     network_ready = ensure_correct_network(target_network)
-#
-#     if network_ready:
-#         print(
-#             "\nNetwork is secure. Ready to launch Gig Performer and Open Stage Control..."
-#         )
-#         # Your gig launching code would go here
-#     else:
-#         print("\nPlease check your phone hotspot and try again.")

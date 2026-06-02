@@ -1,6 +1,8 @@
 import psutil
 import pygetwindow as gw
 import time
+from switch_defender import switch_defender
+from switch_sleep import switch_sleep
 
 
 def force_kill(target_processes):
@@ -46,6 +48,8 @@ def clear_the_deck(protected_titles):
 
 
 def main():
+    switch_sleep("on")
+    switch_defender("on")
     # 1. Put the exact .exe names here for the apps that MUST die
     apps_to_nuke = ["GigPerformer4.exe", "open-stage-control.exe"]
 
