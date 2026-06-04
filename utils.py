@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import shutil
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 
 def resource_path(relative_path):
@@ -44,3 +45,21 @@ def load_config():
     _ensure_settings_file()
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
+
+
+def set_volume(percentage):
+    # 1. Get the speaker device
+    device = AudioUtilities.GetSpeakers()
+
+    # 2. Use the direct property instead of trying to manually .Activate() it
+    interface = device.EndpointVolume
+
+    # 3. Cast it to the standard volume control interface
+    volume = interface.QueryInterface(IAudioEndpointVolume)
+
+    # 4. Convert percentage (0-100) to a scalar value (0.0 to 1.0)
+    scalar_volume = percentage / 100.0
+
+    # 5. Set the master volume
+    volume.SetMasterVolumeLevelScalar(scalar_volume, None)
+    print(f"Volume successfully set to {percentage}%")

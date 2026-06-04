@@ -8,7 +8,7 @@ import os
 import glob
 import connection
 import snap
-from utils import load_config, resource_path
+from utils import load_config, resource_path, set_volume
 from switch_defender import switch_defender
 from switch_sleep import switch_sleep
 
@@ -176,6 +176,7 @@ def main():
     # ---------------------------------------------------------
     switch_sleep("off")
     switch_defender("off")
+    set_volume(90)
 
     # ---------------------------------------------------------
     # 2. Connect the PC to my mobile HotSpot
@@ -194,4 +195,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # print(icon_def)
