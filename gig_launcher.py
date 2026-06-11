@@ -8,7 +8,7 @@ import os
 import glob
 import connection
 import snap
-from utils import load_config, resource_path, set_volume
+from utils import load_config, resource_path, set_volume, time_it
 from switch_defender import switch_defender
 from switch_sleep import switch_sleep
 
@@ -164,6 +164,7 @@ def launch_programs(phone_name):
     open_url_on_phone(f"http://{ip_address}:8080", phone_name)
 
 
+@time_it
 def main():
     # ---------------------------------------------------------
     # 0. Load fresh settings every time (so UI changes apply immediately)

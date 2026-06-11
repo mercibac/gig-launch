@@ -1,8 +1,10 @@
 import sys
 import os
 import json
+import time
 import shutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from functools import wraps
 
 
 def resource_path(relative_path):
@@ -14,6 +16,22 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
+def time_it(func):
+    @wraps(func)  # Preserves the original function's metadata
+    def wrapper(*args, **kwargs):
+        start_time = time.perf_counter()  # Highest available resolution timer
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+
+        execution_time = end_time - start_time
+        print(
+            f"Function '{func.__name__}' took {execution_time:.6f} seconds to execute."
+        )
+        return result
+
+    return wrapper
 
 
 def _get_persistent_dir():
