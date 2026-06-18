@@ -25,10 +25,8 @@ def time_it(func):
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
 
-        execution_time = end_time - start_time
-        print(
-            f"Function '{func.__name__}' took {execution_time:.6f} seconds to execute."
-        )
+        execution_time = (end_time - start_time) / 60
+        print(f"Function '{func.__name__}' took {execution_time:.2f} min to execute.")
         return result
 
     return wrapper
