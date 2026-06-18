@@ -53,37 +53,47 @@ def get_osc_on_top():
         print("PyAutoGUI could not locate the image.")
 
 
+def run_cmd(cmd):
+    timeout_seconds = 2
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    si.wShowWindow = subprocess.SW_HIDE
+    try:
+        # KDE Connect uses Qt, which needs a valid window handle for its event loop.
+        # CREATE_NO_WINDOW kills the handle entirely and breaks Qt's PostMessage.
+        # Instead, we create a hidden window so Qt works but the user sees nothing.
+        subprocess.run(
+            cmd,
+            check=True,
+            startupinfo=si,
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+        )
+        print(f"{cmd} runs successfuly!")
+    except subprocess.TimeoutExpired:
+        print(f"Attempt {cmd} failed: Command timed out after {timeout_seconds}s.")
+    except subprocess.CalledProcessError as e:
+        print(f"Attempt {cmd} failed: Command returned non-zero exit status.")
+        print(f"Error output: {e.stderr.strip()}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+
 def open_url_on_phone(url, phone_name):
     """
     Sends a URL to a specific paired device via KDE Connect.
     """
     print(f"Sending {url} to {phone_name}...")
 
-    refresh = ["kdeconnect-cli", "--refresh"]
+    refresh_kde = ["kdeconnect-cli", "--refresh"]
+    ping_kde = ["kdeconnect-cli", "--ping", "--name", phone_name]
     # The command uses --share to send the link, and --name to target the exact device
-    command = ["kdeconnect-cli", "--share", url, "--name", phone_name]
+    open_browser = ["kdeconnect-cli", "--share", url, "--name", phone_name]
 
-    # KDE Connect uses Qt, which needs a valid window handle for its event loop.
-    # CREATE_NO_WINDOW kills the handle entirely and breaks Qt's PostMessage.
-    # Instead, we create a hidden window so Qt works but the user sees nothing.
-    si = subprocess.STARTUPINFO()
-    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    si.wShowWindow = subprocess.SW_HIDE
-
-    try:
-        # Run the command silently in the background
-        subprocess.run(refresh, check=True, startupinfo=si)
-        subprocess.run(command, check=True, startupinfo=si)
-        print("URL sent successfully! Your phone should wake up and open the browser.")
-
-    except subprocess.CalledProcessError as e:
-        print(
-            f"Failed to send URL. Is KDE Connect running, paired, and connected? Error: {e}"
-        )
-    except FileNotFoundError:
-        print(
-            "Error: 'kdeconnect-cli' not found. Make sure the KDE Connect Windows app is installed and running."
-        )
+    run_cmd(refresh_kde)
+    run_cmd(ping_kde)
+    run_cmd(open_browser)
 
 
 def load_the_most_recent_file():
@@ -189,6 +199,7 @@ def main():
             "\nNetwork is secure. Ready to launch Gig Performer and Open Stage Control..."
         )
         launch_programs(config["phone_name"])
+        time.sleep(10)
         snap.snap_gig_windows()
     else:
         print("\nPlease check your phone hotspot and try again.")
