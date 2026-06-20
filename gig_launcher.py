@@ -87,7 +87,9 @@ def open_url_on_phone(url, phone_name):
     print(f"Sending {url} to {phone_name}...")
 
     refresh_kde = ["kdeconnect-cli", "--refresh"]
+    time.sleep(7)
     ping_kde = ["kdeconnect-cli", "--ping", "--name", phone_name]
+    time.sleep(2)
     # The command uses --share to send the link, and --name to target the exact device
     open_browser = ["kdeconnect-cli", "--share", url, "--name", phone_name]
 
