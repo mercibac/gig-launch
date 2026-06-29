@@ -1,0 +1,2 @@
+- compilation
+uv run pyinstaller --noconfirm --onefile --windowed --name "Gig Control Center" --icon="icon.ico" --add-data "assets/osc_icon.png;./assets" --add-data "icon.ico;." --add-data "assets/defender_activate_icon.png;./assets" --add-data "assets/defender_protection_icon.png;./assets" --add-data "assets/defender_realtime_icon.png;./assets" --add-data "assets/defender_settings_icon.png;./assets" --add-data "settings.json;." main_ui.py
